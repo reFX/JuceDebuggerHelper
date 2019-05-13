@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="juce::String">
+    <DisplayString>{text.data,s}</DisplayString>
+  </Type>
+
+  <Type Name="juce::Array&lt;*&gt;">
+    <DisplayString Condition="values.numUsed == 0">{{ EMPTY numAllocated={values.numAllocated} }}</DisplayString>
+    <DisplayString>{{ numUsed={values.numUsed} numAllocated={values.numAllocated} }}</DisplayString>
+    <Expand>
+      <Item Name="[numUsed]">values.numUsed</Item>
+      <ArrayItems>
+        <Size>values.numUsed</Size>
+        <ValuePointer>values.elements.data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <Type Name="juce::OwnedArray&lt;*&gt;">
+    <DisplayString Condition="values.numUsed == 0">{{ EMPTY numAllocated={values.numAllocated} }}</DisplayString>
+    <DisplayString>{{ numUsed={values.numUsed} numAllocated={values.numAllocated} }}</DisplayString>
+    <Expand>
+      <Item Name="[numUsed]">values.numUsed</Item>
+      <IndexListItems>
+        <Size>values.numUsed</Size>
+        <ValueNode>*values.elements.data[$i]</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="juce::ReferenceCountedArray&lt;*&gt;">
+    <DisplayString Condition="values.numUsed == 0">{{ EMPTY numAllocated={values.numAllocated} }}</DisplayString>
+    <DisplayString>{{ numUsed={values.numUsed} numAllocated={values.numAllocated} }}</DisplayString>
+    <Expand>
+      <Item Name="[numUsed]">values.numUsed</Item>
+      <ArrayItems>
+        <Size>values.numUsed</Size>
+        <ValuePointer>values.elements.data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <Type Name="juce::Identifier">
+    <DisplayString>{{ identifier={name} }}</DisplayString>
+  </Type>
+
+  <Type Name="juce::ValueTree">
+    <DisplayString Condition="object.referencedObject == 0">ValueTree::invalid</DisplayString>
+    <DisplayString>{object.referencedObject->type}</DisplayString>
+    <Expand>
+      <Item Name="properties">object.referencedObject->properties</Item>
+      <Item Name="children">object.referencedObject->children</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="juce::HashMap&lt;*,&gt;">
+    <DisplayString Condition="totalNumItems == 0">{{ EMPTY numAllocated={hashSlots.values.numAllocated} }}</DisplayString>
+    <DisplayString>{{ numUsed={totalNumItems} numAllocated={hashSlots.values.numAllocated} }}</DisplayString>
+    <Expand>
+      <CustomListItems>
+        <Variable Name="iBucket" InitialValue="-1" />
+        <Variable Name="pBucket" InitialValue="hashSlots.values.elements.data" />
+        <Variable Name="iBucketIncrement" InitialValue="-1" />
+
+        <Size>totalNumItems</Size>
+        <Exec>pBucket = nullptr</Exec>
+        <Loop>
+          <If Condition="pBucket == nullptr">
+            <Exec>iBucket++</Exec>
+            <Exec>iBucketIncrement = __findnonnull(hashSlots.values.elements.data + iBucket, hashSlots.values.numUsed - iBucket)</Exec>
+            <Break Condition="iBucketIncrement == -1" />
+            <Exec>iBucket += iBucketIncrement</Exec>
+            <Exec>pBucket = hashSlots.values.elements.data + iBucket</Exec>
+          </If>
+          <Item>*pBucket</Item>
+          <Exec>pBucket = (*pBucket)->nextEntry == nullptr ? nullptr : &amp;(*pBucket)->nextEntry</Exec>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="juce::var">
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Void::instance">{{ intValue={value.intValue} }}</DisplayString>
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Undefined::instance">{{ intValue={value.intValue} }}</DisplayString>
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Int::instance">{{ intValue={value.intValue} }}</DisplayString>
+    <!-- -->
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Int64::instance">{{ int64Value={value.int64Value} }}</DisplayString>
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Double::instance">{{ doubleValue={value.doubleValue} }}</DisplayString>
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Bool::instance">{{ boolValue={value.boolValue} }}</DisplayString>
+    <!-- -->
+    <DisplayString Condition="type == &amp;juce::var::VariantType_String::instance">{{ stringValue={reinterpret_cast&lt;String*&gt;(value.stringValue)->text.data} }}</DisplayString>
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Object::instance">{{ VariantType_Object }}</DisplayString>
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Array::instance">{{ VariantType_Array }}</DisplayString>
+    <!-- -->
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Binary::instance">{{ VariantType_Binary }}</DisplayString>
+    <DisplayString Condition="type == &amp;juce::var::VariantType_Method::instance">{{ VariantType_Method }}</DisplayString>
+  </Type>
+  
+</AutoVisualizer>
