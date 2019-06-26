@@ -41,8 +41,7 @@
   </Type>
 
   <Type Name="juce::Colour">
-    <DisplayString>{{ {(int)argb.components.r}, {(int)argb.components.g}, {(int)argb.components.b}, {(float)(argb.components.a/255.0)} }}</DisplayString>
-    <Expand>
+    <DisplayString>{{ r={(int)argb.components.r}, g={(int)argb.components.g}, b={(int)argb.components.b}, a={(float)(argb.components.a/255.0),g} }}</DisplayString>    <Expand>
       <Item Name="Red">(int)argb.components.r</Item>
       <Item Name="Green">(int)argb.components.g</Item>
       <Item Name="Blue">(int)argb.components.b</Item>
