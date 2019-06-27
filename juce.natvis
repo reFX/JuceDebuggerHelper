@@ -104,5 +104,9 @@
     <DisplayString Condition="type == &amp;juce::var::VariantType_Binary::instance">{{ VariantType_Binary }}</DisplayString>
     <DisplayString Condition="type == &amp;juce::var::VariantType_Method::instance">{{ VariantType_Method }}</DisplayString>
   </Type>
+
+  <Type Name="juce::Image">
+    <DisplayString>{{ format={image.referencedObject->pixelFormat}, width={image.referencedObject->width}, height={image.referencedObject->height} }}</DisplayString>
+  </Type>
   
 </AutoVisualizer>
