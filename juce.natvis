@@ -104,9 +104,21 @@
     <DisplayString Condition="type == &amp;juce::var::VariantType_Binary::instance">{{ VariantType_Binary }}</DisplayString>
     <DisplayString Condition="type == &amp;juce::var::VariantType_Method::instance">{{ VariantType_Method }}</DisplayString>
   </Type>
-
+  
   <Type Name="juce::Image">
     <DisplayString>{{ format={image.referencedObject->pixelFormat}, width={image.referencedObject->width}, height={image.referencedObject->height} }}</DisplayString>
+  </Type>
+
+  <Type Name="juce::StringArray">
+    <DisplayString Condition="strings.values.numUsed == 0">{{ EMPTY numAllocated={strings.values.numAllocated} }}</DisplayString>
+    <DisplayString>{{ numUsed={strings.values.numUsed} numAllocated={strings.values.numAllocated} }}</DisplayString>
+    <Expand>
+      <Item Name="[numUsed]">strings.values.numUsed</Item>
+      <ArrayItems>
+        <Size>strings.values.numUsed</Size>
+        <ValuePointer>strings.values.elements.data</ValuePointer>
+      </ArrayItems>
+    </Expand>
   </Type>
   
 </AutoVisualizer>
